@@ -1,6 +1,6 @@
 # Code Connect Backend
 
-Uma API REST para uma plataforma de compartilhamento de conteúdo sobre programação, construída com NestJS, Prisma e SQLite.
+Uma API REST para uma plataforma de compartilhamento de conteúdo sobre programação, construída com NestJS, Prisma e SQLite. Segue o Link da plataforma: https://github.com/felipecoelhodev/codeconnect
 
 ## Sobre o Projeto
 
