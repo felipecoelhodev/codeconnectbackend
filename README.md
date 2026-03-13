@@ -1,34 +1,39 @@
-# Code Connect API 
+# Code Connect Backend
 
-A **Code Connect API** é uma interface backend robusta construída para gerenciar uma plataforma de blog e rede social para desenvolvedores. O projeto oferece funcionalidades completas de autenticação, publicação de posts e interações via comentários.
+Uma API REST para uma plataforma de compartilhamento de conteúdo sobre programação, construída com NestJS, Prisma e SQLite.
+
+## Sobre o Projeto
+
+O Code Connect é uma plataforma onde desenvolvedores podem compartilhar posts sobre programação, interagir através de comentários e curtidas. Esta é a API backend que fornece todos os endpoints necessários para:
+
+* Autenticação de usuários (registro, login, JWT)
+* Gerenciamento de posts (criar, listar, editar, excluir)
+* Sistema de comentários
+* Sistema de curtidas
+* Perfis de usuários
 
 ## Tecnologias Utilizadas
 
-* **Framework:** [NestJS](https://nestjs.com/) (Node.js)
-* **ORM:** [Prisma](https://www.prisma.io/)
-* **Banco de Dados:** SQLite (padrão para desenvolvimento)
-* **Segurança:** JWT (JSON Web Token) & BCrypt para hashing de senhas
-* **Documentação:** Swagger (OpenAPI)
-* **Validação:** Class-validator & Class-transformer
+* NestJS - Framework Node.js para APIs escaláveis
+* Prisma - ORM moderno para TypeScript/JavaScript
+* SQLite - Banco de dados local (arquivo dev.db)
+* JWT - Autenticação via tokens
+* bcrypt - Hash de senhas
+* TypeScript - Superset do JavaScript
 
-## Arquitetura do Banco de Dados
-
-O banco de dados é composto por três entidades principais:
-
-1.  **Users:** Gerenciamento de perfis, autenticação e avatares.
-2.  **Posts:** Armazenamento de conteúdo, slugs para SEO, suporte a Markdown e sistema de likes.
-3.  **Comments:** Interação entre usuários vinculada aos posts.
-
-## Como Executar o Projeto
+## Como Rodar o Projeto
 
 ### Pré-requisitos
-* Node.js (v18 ou superior)
+* Node.js (versão 18 ou superior)
 * npm ou yarn
 
-### Instalação
+### Configuração
+
 1. Clone o repositório:
 ```bash
-git clone [https://github.com/seu-usuario/code-connect-api.git](https://github.com/seu-usuario/code-connect-api.git)
+   git clone [url-do-repositorio]
+   cd code-connect-backend-node
+
 ```
 
 2. Instale as dependências:
@@ -38,45 +43,125 @@ npm install
 ```
 
 
-3. Configure as variáveis de ambiente no arquivo `.env`:
+3. Configure as variáveis de ambiente:
+O arquivo `.env` já deve estar configurado com:
 ```env
 DATABASE_URL="file:./dev.db"
-JWT_SECRET="sua_chave_secreta"
+JWT_SECRET="your-secret-key-here"
+
+```
+
+
+4. Execute as migrações e seeds:
+```bash
+# Gera o banco de dados SQLite e aplica as migrações
+npx prisma migrate dev
+
+# Popula o banco com dados iniciais (usuários e posts de exemplo)
+npx prisma db seed
 
 ```
 
 
 
-### Banco de Dados e Seed
+## Executando a Aplicação
 
-Execute as migrações e popule o banco com dados de teste:
-
+* **Modo desenvolvimento (com hot-reload):**
 ```bash
-npx prisma migrate dev --name init
-npm run seed
-
-```
-
-### Inicialização
-
-```bash
-# Desenvolvimento
 npm run start:dev
 
-# Produção
+```
+
+
+* **Modo produção:**
+```bash
 npm run build
 npm run start:prod
 
 ```
 
-## Documentação da API
 
-Após iniciar o servidor, a documentação interativa do Swagger estará disponível em:
-`http://localhost:3000/api`
+
+A API estará disponível em: `http://localhost:3000`
+
+## Banco de Dados
+
+O projeto usa SQLite como banco de dados, o que significa:
+
+* Sem dependências externas (não precisa instalar PostgreSQL, Docker, etc.)
+* Portabilidade total - o banco é um arquivo (`prisma/dev.db`)
+* Fácil backup - basta copiar o arquivo do banco
+* Perfeito para desenvolvimento e pequenas aplicações
+
+### Visualizando os dados
+
+Para abrir a interface gráfica do Prisma Studio:
+
+```bash
+npx prisma studio
+
+```
+
+## Estrutura do Projeto
+
+```text
+src/
+├── auth/           # Módulo de autenticação
+├── users/          # Módulo de usuários
+├── posts/          # Módulo de posts
+├── comments/       # Módulo de comentários
+├── prisma/         # Configurações do Prisma
+└── main.ts         # Arquivo principal
+
+prisma/
+├── schema.prisma   # Schema do banco de dados
+├── dev.db          # Banco SQLite (criado automaticamente)
+├── migrations/     # Histórico de migrações
+└── seed.ts         # Script de dados iniciais
+
+```
 
 ## Endpoints Principais
 
-* `POST /auth/register`: Criação de novos usuários.
-* `POST /auth/login`: Autenticação e geração de Token JWT.
-* `GET /posts`: Listagem de conteúdos.
-* `POST /comments/post/:postId`: Interação em posts (requer autenticação).
+### Autenticação
+
+* `POST /auth/register` - Cadastro de usuário
+* `POST /auth/login` - Login e obtenção do JWT
+
+### Posts
+
+* `GET /posts` - Listar todos os posts
+* `GET /posts/:id` - Obter post específico
+* `POST /posts` - Criar novo post (autenticado)
+* `PUT /posts/:id` - Editar post (autenticado)
+* `DELETE /posts/:id` - Excluir post (autenticado)
+
+### Comentários
+
+* `GET /posts/:id/comments` - Listar comentários de um post
+* `POST /posts/:id/comments` - Criar comentário (autenticado)
+* `PUT /comments/:id` - Editar comentário (autenticado)
+* `DELETE /comments/:id` - Excluir comentário (autenticado)
+
+## Dados de Exemplo
+
+Após executar o seed, você terá:
+
+* **4 usuários de exemplo** (senha: 123456): ana@codeconnect.com, bruno@codeconnect.com, carla@codeconnect.com, diego@codeconnect.com.
+* **12 posts** sobre diversos temas de programação.
+* **Comentários aleatórios** nos posts.
+
+## Comandos Úteis
+
+| Ação | Comando |
+| --- | --- |
+| Instalar dependências | `npm install` |
+| Rodar em desenvolvimento | `npm run start:dev` |
+| Build para produção | `npm run build` |
+| Prisma - Gerar client | `npx prisma generate` |
+| Prisma - Aplicar migrações | `npx prisma migrate dev` |
+| Prisma - Resetar banco | `npx prisma migrate reset` |
+| Prisma - Visualizar dados | `npx prisma studio` |
+| Rodar seeds novamente | `npx prisma db seed` |
+| Linting | `npm run lint` |
+| Testes | `npm run test` |
