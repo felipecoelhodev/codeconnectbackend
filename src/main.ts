@@ -6,11 +6,8 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
-  // Configuração do CORS
-  app.enableCors({
-    origin: 'http://localhost:5173',
-    credentials: true,
-  });
+  // Alteração aqui: Permite que qualquer origem acesse a API (ideal para o deploy inicial)
+  app.enableCors(); 
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -30,6 +27,7 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  // A Vercel vai injetar a porta automaticamente através do process.env.PORT
   await app.listen(process.env.PORT ?? 3000);
 }
 bootstrap();
