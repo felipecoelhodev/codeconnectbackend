@@ -41,6 +41,13 @@ export class PostResponseDto {
   cover: string;
 
   @ApiProperty({
+    example: '/uploads/image-123.jpg',
+    description: 'URL da imagem principal do post',
+    required: false,
+  })
+  imageUrl?: string;
+
+  @ApiProperty({
     example: 'Introdução ao React',
     description: 'Título do post',
   })

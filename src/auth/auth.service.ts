@@ -42,7 +42,6 @@ export class AuthService {
     const user = await this.usersService.findByEmail(loginDto.email);
 
     if (!user) {
-      console.log('usuario nao encontrado');
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
@@ -52,7 +51,6 @@ export class AuthService {
     );
 
     if (!isPasswordValid) {
-      console.log('senha errado');
       throw new UnauthorizedException('Credenciais inválidas');
     }
 
@@ -73,7 +71,6 @@ export class AuthService {
     const user = await this.usersService.findById(userId);
 
     if (!user) {
-      console.log('profile nao encontrado');
       throw new UnauthorizedException('Usuário não encontrado');
     }
 
